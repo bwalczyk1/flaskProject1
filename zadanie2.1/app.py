@@ -17,7 +17,7 @@ class NumbersForm(FlaskForm):
 def index():
     numbersForm = NumbersForm()
     if request.method == "GET":
-        return render_template('index.html', title='Zadanie 2.1', numbersForm=numbersForm)
+        return render_template('weather.html', title='Zadanie 2.1', numbersForm=numbersForm)
 
     numbersString = request.form['numbers']
     numbers = [int(numStr) for numStr in numbersString.split(",")]
@@ -26,7 +26,7 @@ def index():
     minNumber = 'Wartość minimalna: ' + str(min(numbers))
     avgNumber = 'Średnia ciągu: ' + str(sum(numbers)/len(numbers))
     sortedNumbers = 'Posortowany malejąco ciąg: ' + ','.join(str(n) for n in numbers)
-    return render_template('index.html', title='Zadanie 2.1', numbersForm=numbersForm, data=[sortedNumbers, minNumber, maxNumber, avgNumber])
+    return render_template('weather.html', title='Zadanie 2.1', numbersForm=numbersForm, data=[sortedNumbers, minNumber, maxNumber, avgNumber])
 
 if __name__ == '__main__':
     app.run()

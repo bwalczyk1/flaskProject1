@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
+    <div class="container mt-2">
+        {{ wtf.quick_form(weatherForm, action='/') }}
+        {% if weatherData %}
+            {% if weatherData.data_pomiaru %}
+                Data pomiaru: {{ weatherData.data_pomiaru }} <br>
+                Godzina pomiaru: {{ weatherData.godzina_pomiaru }} <br>
+                Temperatura: {{ weatherData.temperatura }} <br>
+                Predkość wiatru: {{ weatherData.predkosc_wiatru }} <br>
+                Kierunek wiatru: {{ weatherData.kierunek_wiatru }} <br>
+                Wilgotność względna: {{ weatherData.wilgotnosc_wzgledna }} <br>
+                Suma opadów: {{ weatherData.suma_opadu }} <br>
+                Ciśnienie: {{ weatherData.cisnienie }} <br>
+            {% else %}
+                {{ weatherData.message }}
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

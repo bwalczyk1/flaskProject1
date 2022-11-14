@@ -12,6 +12,45 @@
             document.getElementById("clock").innerText = date.toLocaleTimeString();
         },500);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const data = {
+            labels: [
+                {% for subject in grades %}
+                    '{{ subject | title}}',
+                {% endfor %}
+            ],
+            datasets: [
+                {
+                    label: 'Średnia ocen - pierwszy semestr',
+                    backgroundColor: 'rgb(110, 66, 193, 0.5)',
+                    data: [
+                        {% for subject, terms in grades.items() %}
+                            '{{ countAverage(subject, 'term1') }}',
+                        {% endfor %}
+                    ],
+                },
+                {
+                    label: 'Średnia ocen - drugi semestr',
+                    backgroundColor: 'rgb(20, 164, 77, 0.5)',
+                    data: [
+                        {% for subject, terms in grades.items() %}
+                            '{{ countAverage(subject, 'term2') }}',
+                        {% endfor %}
+                    ],
+                }
+            ]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(document.getElementById('myChart'), config);
+    </script>
 {% endblock %}
 {% block navbar %}
     {% if userLogin %}
@@ -31,7 +70,7 @@
                             Twoja średnia
                         </div>
                         <div class="card-body">
-                            <h2 class="text-center">4,2</h2>
+                            <h2 class="text-center">{{ countAverage("", "") }}</h2>
                         </div>
                     </div>
                 </div>
@@ -81,6 +120,9 @@
             <div class="col-lg-12">
                 {% include "include/gradesTab.html" %}
             </div>
+        </div>
+        <div class="row">
+            <canvas id="myChart"></canvas>
         </div>
         {% else %}
             <div class="alert alert-warning">

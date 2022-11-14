@@ -18,7 +18,7 @@ app.config['SECRET_KEY'] = 'dfghj765$%^Kjhgd'
 @app.route('/')
 def index():
     userForm = NameForm()
-    return render_template('index.html', title='Strona główna', userForm=userForm)
+    return render_template('weather.html', title='Strona główna', userForm=userForm)
 
 @app.route('/user', methods=['POST'])
 def user():

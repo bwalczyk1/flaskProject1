@@ -25,7 +25,7 @@
       "answer": [4,3,5,4],
       "quiz": [5,3,5],
       "test": [2,6],
-      "interim": 3,
+      "interim": 4,
       "yearly": 3
     }
   },
@@ -34,7 +34,7 @@
       "answer": [1,2,4,6],
       "quiz": [5,1,2,4],
       "test": [4,4,4],
-      "interim": 4
+      "interim": 3
     },
     "term2" : {
       "answer": [2,3,5,4],

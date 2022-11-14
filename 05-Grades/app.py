@@ -21,6 +21,36 @@ class LoginForm(FlaskForm):
 
 users = {1: {'userLogin': 'lblitek', 'userPass': 'Qwerty123!', 'fname': 'Łukasz', 'lname': 'Blitek'}}
 
+def countAverage(subjectValue, termValue):
+    with open('data/grades.json') as gradesFile:
+        grades = json.load(gradesFile)
+        gradesFile.close()
+    sumGrades = 0
+    length = 0
+    if subjectValue == "" and termValue == "":
+        for subject, terms in grades.items():
+            for term, categories in terms.items():
+                for category, grades in categories.items():
+                    if category == "answer" or category == "quiz" or category == "test":
+                        for grade in grades:
+                            sumGrades += grade
+                            length += 1
+    else:
+        for subject, terms in grades.items():
+            if subject == subjectValue:
+                for term, categories in terms.items():
+                    if term == termValue:
+                        for category, grades in categories.items():
+                            if category == "answer" or category == "quiz" or category == "test":
+                                for grade in grades:
+                                    sumGrades += grade
+                                    length += 1
+    return round(sumGrades/length, 2)
+
+
+
+
+
 @app.route('/')
 def index():
     return render_template('index.html', title='Strona główna')
@@ -46,7 +76,7 @@ def dashboard():
     with open('data/grades.json') as gradesFile:
         grades = json.load(gradesFile)
         gradesFile.close()
-    return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades)
+    return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades, categories=grades, countAverage=countAverage)
 
 if __name__ == '__main__':
     app.run(debug=True)
