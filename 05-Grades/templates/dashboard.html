@@ -70,7 +70,7 @@
                             Twoja średnia
                         </div>
                         <div class="card-body">
-                            <h2 class="text-center">{{ countAverage("", "") }}</h2>
+                            <h3 class="text-center">{{ countAverage("", "") }}</h3>
                         </div>
                     </div>
                 </div>
@@ -80,9 +80,14 @@
                             Przedmioty - najwyższa średnia
                         </div>
                         <div class="card-body">
-                            <p class="text-start lead text-success">
-                                5,0
-                            </p>
+<!--                            <p class="text-start lead text-success">-->
+                                <h4>
+                                    {% for object in getHighest() %}
+                                        {{ object["subject"] }}
+                                        <span class="badge bg-success">{{ object["average"] }}</span>
+                                    {% endfor %}
+                                </h4>
+<!--                            </p>-->
                         </div>
                     </div>
                 </div>
@@ -92,9 +97,9 @@
                             Przedmioty - zagrożenia
                         </div>
                         <div class="card-body">
-                            <p class="text-start lead text-success">
-                                matematyka, plastyka
-                            </p>
+<!--                            <p class="text-start lead text-success">-->
+                                <h4 class="text-center text-danger">{{ getEndangered() }}</h4>
+<!--                            </p>-->
                         </div>
                     </div>
                 </div>

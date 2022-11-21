@@ -8,6 +8,7 @@
       <th>Oceny - drugi semestr</th>
       <th>Średnia</th>
       <th>Ocena śródroczna</th>
+      <th>Średnia roczna</th>
       <th>Ocena roczna</th>
     </tr>
   </thead>
@@ -68,6 +69,7 @@
                 {% endif %}
               {% endfor %}
             </td>
+            <td class="text-center">{{ countAverage(subject, "") }}</td>
             <td class="text-center">
               {% for category, yearly in categories.items() %}
                 {% if category == 'yearly' %}
@@ -77,20 +79,20 @@
             </td>
           {% endif %}
         {% endfor %}
-        <td>
-          {% for category, interim in categories.items() %}
-            {% if category == 'interim' %}
-              <span class="badge bg-dark">{{ interim }}</span>
-            {% endif %}
-          {% endfor %}
-        </td>
-        <td>
-          {% for category, yearly in categories.items() %}
-            {% if category == 'yearly' %}
-              <span class="badge bg-dark">{{ yearly }}</span>
-            {% endif %}
-          {% endfor %}
-        </td>
+<!--        <td>-->
+<!--          {% for category, interim in categories.items() %}-->
+<!--            {% if category == 'interim' %}-->
+<!--              <span class="badge bg-dark">{{ interim }}</span>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+<!--        </td>-->
+<!--        <td>-->
+<!--          {% for category, yearly in categories.items() %}-->
+<!--            {% if category == 'yearly' %}-->
+<!--              <span class="badge bg-dark">{{ yearly }}</span>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+<!--        </td>-->
       </tr>
     {% endfor %}
   </tbody>

@@ -35,6 +35,15 @@ def countAverage(subjectValue, termValue):
                         for grade in grades:
                             sumGrades += grade
                             length += 1
+    elif termValue == "":
+        for subject, terms in grades.items():
+            if subject == subjectValue:
+                for term, categories in terms.items():
+                    for category, grades in categories.items():
+                        if category == "answer" or category == "quiz" or category == "test":
+                            for grade in grades:
+                                sumGrades += grade
+                                length += 1
     else:
         for subject, terms in grades.items():
             if subject == subjectValue:
@@ -47,7 +56,39 @@ def countAverage(subjectValue, termValue):
                                     length += 1
     return round(sumGrades/length, 2)
 
+def getEndangered():
+    with open('data/grades.json') as gradesFile:
+        grades = json.load(gradesFile)
+        gradesFile.close()
+    subjectsString = ""
+    for subject, terms in grades.items():
+        if countAverage(subject, "") < 2:
+            if subjectsString == "":
+                subjectsString = subject
+            else:
+                subjectsString = subjectsString + ", " + subject
+    if subjectsString == "":
+        subjectsString = "brak zagrożeń"
+    return subjectsString
 
+def getHighest():
+    with open('data/grades.json') as gradesFile:
+        grades = json.load(gradesFile)
+        gradesFile.close()
+    subjectsArray = []
+    for subject, terms in grades.items():
+        avg = countAverage(subject, "")
+        subjectsArray.append({"subject": subject, "average": avg})
+    subjectsArray.sort(key=sortArray)
+    while len(subjectsArray) > 2:
+        subjectsArray.pop()
+    return subjectsArray
+
+
+def sortArray(k):
+    return -k['average']
+
+lstObj = [{'value' : -1},{'value' : 200},{'value' : 1},{'value' : 100},{'value' : 50}]
 
 
 
@@ -76,7 +117,7 @@ def dashboard():
     with open('data/grades.json') as gradesFile:
         grades = json.load(gradesFile)
         gradesFile.close()
-    return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades, categories=grades, countAverage=countAverage)
+    return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades, categories=grades, countAverage=countAverage, getEndangered=getEndangered, getHighest=getHighest)
 
 if __name__ == '__main__':
     app.run(debug=True)
