@@ -19,6 +19,10 @@ class LoginForm(FlaskForm):
     userPass = PasswordField('Hasło: ', validators=[DataRequired()])
     submit = SubmitField('Zaloguj')
 
+class AddSubject(FlaskForm):
+    subject = StringField("Nazwa przedmiotu", validators=[DataRequired()])
+    submit = SubmitField('Dodaj')
+
 users = {1: {'userLogin': 'lblitek', 'userPass': 'Qwerty123!', 'fname': 'Łukasz', 'lname': 'Blitek'}}
 
 def countAverage(subjectValue, termValue):
@@ -54,7 +58,10 @@ def countAverage(subjectValue, termValue):
                                 for grade in grades:
                                     sumGrades += grade
                                     length += 1
-    return round(sumGrades/length, 2)
+    if length != 0:
+        return round(sumGrades/length, 2)
+    else:
+        return 0
 
 def getEndangered():
     with open('data/grades.json') as gradesFile:
@@ -118,6 +125,24 @@ def dashboard():
         grades = json.load(gradesFile)
         gradesFile.close()
     return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades, categories=grades, countAverage=countAverage, getEndangered=getEndangered, getHighest=getHighest)
+
+@app.route('/addSubject', methods=['POST', 'GET'])
+def addSubject():
+    addSubject = AddSubject()
+    if addSubject.validate_on_submit():
+        with open('data/grades.json', encoding='utf-8') as gradesFile:
+            grades = json.load(gradesFile)
+            subject = addSubject.subject.data
+            grades[subject] = {
+                'term1': {'answer': [], 'quiz': [], 'test': [], 'interim': 0},
+                'term2': {'answer': [], 'quiz': [], 'test': [], 'interim': 0, 'yearly': 0}
+            }
+            with open('data/grades.json', 'w', encoding='utf-8') as gradesFile:
+                json.dump(grades, gradesFile)
+                gradesFile.close()
+                flash('Dane zapisane poprawnie')
+                return redirect('addSubject')
+    return render_template('addSubject.html', title="Dodaj przedmiot", userLogin=session.get('userLogin'), date=date, addSubject=addSubject)
 
 if __name__ == '__main__':
     app.run(debug=True)
