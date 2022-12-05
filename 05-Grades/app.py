@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from flask_bs4 import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, SelectField, RadioField
 from wtforms.validators import DataRequired
 from datetime import datetime
 
@@ -21,6 +21,20 @@ class LoginForm(FlaskForm):
 
 class AddSubject(FlaskForm):
     subject = StringField("Nazwa przedmiotu", validators=[DataRequired()])
+    submit = SubmitField('Dodaj')
+
+class AddGrade(FlaskForm):
+    subject = SelectField('Wybierz przedmiot', choices=str)
+    term = RadioField('Wybierz semestr:', choices=[('term1', 'Semestr 1'), ('term2', 'Semestr 2')])
+    category = SelectField('Wybierz kategorię:', choices=[('answer', 'Odpowiedź'), ('quiz', 'Kartkówka'), ('test', 'Sprawdzian')])
+    grade = SelectField('Wybierz ocenę', choices=[
+        (6, 'Celujący'),
+        (5, 'Bardzo dobry'),
+        (4, 'Dobry'),
+        (3, 'Dostateczny'),
+        (2, 'Dopuszczający'),
+        (1, 'Niedostateczny')
+    ])
     submit = SubmitField('Dodaj')
 
 users = {1: {'userLogin': 'lblitek', 'userPass': 'Qwerty123!', 'fname': 'Łukasz', 'lname': 'Blitek'}}
@@ -143,6 +157,15 @@ def addSubject():
                 flash('Dane zapisane poprawnie')
                 return redirect('addSubject')
     return render_template('addSubject.html', title="Dodaj przedmiot", userLogin=session.get('userLogin'), date=date, addSubject=addSubject)
+
+@app.route('/addGrade', methods=['POST', 'GET'])
+def addGrade():
+    addGradeForm = AddGrade()
+    with open('data/grades.json') as gradesFile:
+        grades = json.load(gradesFile)
+        gradesFile.close()
+        addGradeForm.subject.choices = [subject for subject in grades]
+    return render_template('addGrade.html', title="Dodaj ocenę", userLogin=session.get('userLogin'), date=date, addGradeForm=addGradeForm)
 
 if __name__ == '__main__':
     app.run(debug=True)
