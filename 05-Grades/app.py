@@ -105,6 +105,36 @@ def getHighest():
         subjectsArray.pop()
     return subjectsArray
 
+def getInterim(selectedSubject, selectedTerm):
+    with open('data/grades.json') as gradesFile:
+        grades = json.load(gradesFile)
+        gradesFile.close()
+    sumGrades = 0
+    length = 0
+    for subject, terms in grades.items():
+        if subject == selectedSubject:
+            for term, categories in terms.items():
+                if term == selectedTerm:
+                    for category, grades in categories.items():
+                        if category == "answer" or category == "quiz" or category == "test":
+                            for grade in grades:
+                                sumGrades += grade
+                                length += 1
+    if length == 0:
+        return 0
+    avg = sumGrades / length
+    if avg >= 5.4:
+        return 6
+    if avg >= 4.6:
+        return 5
+    if avg >= 3.6:
+        return 4
+    if avg >= 2.6:
+        return 3
+    if avg >= 2.0:
+        return 2
+    return 1
+
 
 def sortArray(k):
     return -k['average']
@@ -138,7 +168,7 @@ def dashboard():
     with open('data/grades.json') as gradesFile:
         grades = json.load(gradesFile)
         gradesFile.close()
-    return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades, categories=grades, countAverage=countAverage, getEndangered=getEndangered, getHighest=getHighest)
+    return render_template('dashboard.html', title='Dashboard', userLogin=session.get('userLogin'), date=date, grades=grades, categories=grades, countAverage=countAverage, getEndangered=getEndangered, getHighest=getHighest, getInterim=getInterim)
 
 @app.route('/addSubject', methods=['POST', 'GET'])
 def addSubject():
